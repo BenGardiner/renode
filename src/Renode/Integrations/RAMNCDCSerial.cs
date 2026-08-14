@@ -106,10 +106,7 @@ namespace Antmicro.Renode.Integrations
             {
                 rxBuffer.Enqueue(charData);
 
-                if(rxBuffer.Count >= MaxPacketSize)
-                {
-                    FlushRxBuffer();
-                }
+                FlushRxBuffer();
             }
         }
 
@@ -142,8 +139,8 @@ namespace Antmicro.Renode.Integrations
             deviceToHostEndpoint.HandlePacket(buffer);
         }
 
-        private USBEndpoint hostToDeviceEndpoint;
-        private USBEndpoint deviceToHostEndpoint;
+        private readonly USBEndpoint hostToDeviceEndpoint;
+        private readonly USBEndpoint deviceToHostEndpoint;
 
         private readonly IUART uart;
         private readonly Queue<byte> rxBuffer;
