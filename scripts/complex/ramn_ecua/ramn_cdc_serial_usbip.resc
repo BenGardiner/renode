@@ -1,0 +1,26 @@
+using sysbus
+logLevel 3
+
+$global.name="ECUA"
+
+mach create $name
+include @platforms/boards/ramn.repl
+
+$bin= @https://dl.antmicro.com/projects/renode/ECUA-watchdog.elf-s_2739268-b034321e255eae4970567b0d80cbc762cd3c47d0
+include @platforms/boards/ramn/GATEWAY.repl
+
+showAnalyzer usart1
+
+emulation CreateUSBIPServer
+host.usb CreateRAMNCDCSerial usart1 0x0483 0x5740 0 "ramnCDC"
+
+echo "RAMN ECUA CDC Serial available over USB/IP"
+echo "On Linux: usbip list -r 127.0.0.1"
+echo "          sudo usbip attach -r 127.0.0.1 -b 1-1"
+echo "          Device appears as /dev/ttyACMX"
+
+macro reset
+"""
+sysbus LoadELF $bin
+"""
+runMacro $reset
